@@ -1,0 +1,13 @@
+O objetivo do projeto é criar um script que consuta todas os atendimentos e calcula o valor do sobre aviso 
+
+1. Consultar chamados 
+    selecionar por dia de início do plantão 
+    id do atendente 
+    categoria do chamado
+    categoria do departamento 
+    periodo do chamado
+
+2. Fazer regra de négocios
+    separar os chamados por dia e por hora 
+    calcular os valores por dia 
+    somar tudo e exibir 

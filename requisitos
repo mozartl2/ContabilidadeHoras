@@ -11,3 +11,15 @@ O objetivo do projeto é criar um script que consuta todas os atendimentos e cal
     separar os chamados por dia e por hora 
     calcular os valores por dia 
     somar tudo e exibir 
+
+{
+    "data": datetime,
+    "dia": "Segunda",
+    "horasTotal": 3,
+    "horasTrabalhadas": 1,
+    "horasSob": 2,
+    "feriado": false,
+    "valor50": 0,
+    "valor75": 0,
+    "valor100": 0
+}

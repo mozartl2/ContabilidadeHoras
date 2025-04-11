@@ -55,7 +55,7 @@ while not valida_data(data_inicial):
     data_inicial = input("Data inválida ou inexistente, digite novamente\n")
 
 data_inicial_obj = datetime.strptime(data_inicial, "%d/%m/%Y")
-data_final_obj = data_inicial_obj + timedelta(days=7)
+data_final_obj = data_inicial_obj + timedelta(days=6)
 
 dias_semana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
 datas_atendimento  = [data_inicial_obj + timedelta(days=i) for i in range(7)]
@@ -76,8 +76,10 @@ for i in range(7):
     semana_atendimento[string_data_iteracao] = DiaSob(dias_semana[i],total_horas, feriado)
 
 chamados_dic = consulta_chamados(data_inicial_obj, data_final_obj)
-if chamados_dic:
-    for chamado in chamados_dic:
+if chamados_dic["data"]:
+    for chamado in chamados_dic["data"]:
         print(chamado)
 else:
     print('Não foram encontrados chamados no periodo especificado')
+
+# print(chamados_dic)

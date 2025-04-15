@@ -6,19 +6,29 @@ class DiaSobr:
     def __init__(self, dia, horas_total, feriado):
         self.dia = dia
         self.horas_total = horas_total
-        self.horasSob = None
+        self.horasSob = 0
         self.atendimentos = set()
         self.feriado = feriado
-        self.valor50 = None
-        self.valor75 = None
-        self.valor100 = None
-        self.valor_total = None
-    
-    def calcula():
-        pass
+        self.valor50 = 0
+        self.valor75 = 0
+        self.valor100 = 0
+        self.valor_total = 0
 
-    def mostra():
+    def __repr__(self):
         pass
+    
+    def calcula(self):
+        if self.feriado == False:
+            self.horasSob = horas_total - len(self.atendimentos)
+            if len(self.atendimentos) > 2:
+                self.valor50 = 2 
+                self.valor75 = len(self.atendimentos) - 2
+            else:
+                self.valor50 = len(self.atendimentos)
+        else:
+            self.valor100 = len(self.atendimentos)
+        self.valor_total = (self.horasSob/3)+(self.valor50*1.5)+(self.valor75*1.75)+(self.valor100*2)
+
 
 def valida_data(data_str: str) -> bool:
     try:
@@ -58,8 +68,14 @@ def listar_datas_periodo(dtInicial, dtFinal):
         dtAtual += timedelta(days=1)
     return datas
 
-def consulta_atendente():
-    pass
+def dtm_to_dta_hra(str_dia):
+    if str_dia[-3] == ':':
+        str_dia = str_dia[:-3] + str_dia[-2:]
+    obj_dia = datetime.strptime(str_dia, "%Y-%m-%d %H:%M:%S%z")
+    data = obj_dia.date()
+    data_str_formatada = data.strftime("%d/%m/%Y")
+    hora = obj_dia.hour
+    return data_str_formatada, hora
 
 #Carrega os dados armazenados no Json
 with open("request_data.json", "r", encoding="utf-8") as arquivo:
@@ -73,6 +89,8 @@ while not valida_data(data_inicial):
 data_final = input("Qual a data final que deseja consulta o periodo de sobre aviso?(Formato: DD/MM/YYYY)\n")
 while not valida_data(data_inicial):
     data_final = input("Data inválida ou inexistente, digite novamente\n")
+
+#colocar o valor do salário bruto a ser utilizado como referência
 
 data_inicial_obj = datetime.strptime(data_inicial, "%d/%m/%Y")
 data_final_obj = datetime.strptime(data_final, "%d/%m/%Y")
@@ -100,12 +118,13 @@ chamados_dic = consulta_chamados(data_inicial_obj, data_final_obj)
 #Valida se há dados na consulta 
 if chamados_dic["data"]:
     for chamado in chamados_dic['data']:
-        str_data_chamado = chamado['creation_date']
-        data_chamado = datetime.strptime(str_data_chamado, "%Y-%m-%d %H:%M:%S")
-        data = data_chamado.date()
-        hora = data_chamado.hour
+        dia, hora = dtm_to_dta_hra(chamado['creation_date'])
         operador = chamado['operator']['name']
+        periodo_atendimento[dia].atendimentos.add(hora)
+        # print(f"Dia: {dia}, Hora: {hora}, Operador: {operador}")
 else:
     print('Não foram encontrados chamados no periodo especificado')
 
-# print(chamados_dic)
+for indice, obj in periodo_atendimento.items():
+    obj.calcula()
+    print(f"ID: {indice}, Dia: {obj.dia}, Atendimentos: {len(obj.atendimentos)}")

@@ -5,30 +5,36 @@ from datetime import datetime, timedelta
 class DiaSobr:
     def __init__(self, dia, horas_total, feriado):
         self.dia = dia
-        self.horas_total = horas_total
-        self.horasSob = 0
+        self.horas_total = {'quant': horas_total,'valor': 0}
         self.atendimentos = set()
         self.feriado = feriado
-        self.valor50 = 0
-        self.valor75 = 0
-        self.valor100 = 0
-        self.valor_total = 0
+        self.valores = {
+            "1/3": {"quant": 0, "valor": 0},
+            "50%": {"quant": 0, "valor": 0},
+            "75%": {"quant": 0, "valor": 0},
+            "100%": {"quant": 0, "valor": 0}
+        }
 
     def __repr__(self):
         pass
     
     def calcula(self):
         if self.feriado == False:
-            self.horasSob = horas_total - len(self.atendimentos)
+            self.valores['1/3']['quant'] = self.horas_total['quant'] - len(self.atendimentos)
             if len(self.atendimentos) > 2:
-                self.valor50 = 2 
-                self.valor75 = len(self.atendimentos) - 2
+                self.valores['50%']['quant'] = 2 
+                self.valores['75%']['quant'] = len(self.atendimentos) - 2
             else:
-                self.valor50 = len(self.atendimentos)
+                self.valores['50%']['quant'] = len(self.atendimentos)
         else:
-            self.valor100 = len(self.atendimentos)
-        self.valor_total = (self.horasSob/3)+(self.valor50*1.5)+(self.valor75*1.75)+(self.valor100*2)
-
+            self.valores['100%']['quant'] = len(self.atendimentos)
+            self.valores['1/3']['quant'] = self.horas_total['quant'] - len(self.atendimentos)
+            
+        self.valores['1/3']['valor'] = self.valores['1/3']['quant'] * valor_hora / 3
+        self.valores['50%']['valor'] =  self.valores['50%']['quant'] * 1.5 * valor_hora
+        self.valores['75%']['valor'] =  self.valores['75%']['quant'] * 1.75 * valor_hora
+        self.valores['100%']['valor']  =  self.valores['100%']['quant'] * 2 * valor_hora
+        self.horas_total['valor'] = self.valores['50%']['valor'] + self.valores['75%']['valor'] + self.valores['100%']['valor'] + self.valores['1/3']['valor']
 
 def valida_data(data_str: str) -> bool:
     try:
@@ -90,7 +96,10 @@ data_final = input("Qual a data final que deseja consulta o periodo de sobre avi
 while not valida_data(data_inicial):
     data_final = input("Data inválida ou inexistente, digite novamente\n")
 
-#colocar o valor do salário bruto a ser utilizado como referência
+salario_bruto = input("Qual o valor do sário bruto a ser levado em consideração?")
+valor_hora = float(salario_bruto)/200
+
+#Verificar se há feriado 
 
 data_inicial_obj = datetime.strptime(data_inicial, "%d/%m/%Y")
 data_final_obj = datetime.strptime(data_final, "%d/%m/%Y")

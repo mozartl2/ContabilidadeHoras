@@ -16,7 +16,15 @@ class DiaSobr:
         }
 
     def __repr__(self):
-        pass
+        return (
+            f'{self.dia}\n'
+            f'Horas total: {self.horas_total['quant']}\n'
+            f'Horas sobreaviso: {self.valores['1/3']['valor']}\n'
+            f'Horas 50%: {self.valores['50%']['valor']}\n'
+            f'Horas 75%: {self.valores['75%']['valor']}\n'
+            f'Horas 100%: {self.valores['100%']['valor']}\n'
+            f'Valor Total: {self.horas_total['valor']}\n'
+        )
     
     def calcula(self):
         if self.feriado == False:
@@ -29,7 +37,7 @@ class DiaSobr:
         else:
             self.valores['100%']['quant'] = len(self.atendimentos)
             self.valores['1/3']['quant'] = self.horas_total['quant'] - len(self.atendimentos)
-            
+
         self.valores['1/3']['valor'] = self.valores['1/3']['quant'] * valor_hora / 3
         self.valores['50%']['valor'] =  self.valores['50%']['quant'] * 1.5 * valor_hora
         self.valores['75%']['valor'] =  self.valores['75%']['quant'] * 1.75 * valor_hora
@@ -136,4 +144,4 @@ else:
 
 for indice, obj in periodo_atendimento.items():
     obj.calcula()
-    print(f"ID: {indice}, Dia: {obj.dia}, Atendimentos: {len(obj.atendimentos)}")
+    print(indice, obj)

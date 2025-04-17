@@ -15,14 +15,17 @@ class DiaSobr:
             "100%": {"quant": 0, "valor": 0}
         }
 
+    def isferiado():
+        pass
+
     def __repr__(self):
         return (
             f'{self.dia}\n'
             f'Horas total: {self.horas_total['quant']}\n'
-            f'Horas sobreaviso: {self.valores['1/3']['valor']}\n'
-            f'Horas 50%: {self.valores['50%']['valor']}\n'
-            f'Horas 75%: {self.valores['75%']['valor']}\n'
-            f'Horas 100%: {self.valores['100%']['valor']}\n'
+            f'Valor sobreaviso: {self.valores['1/3']['valor']}\n'
+            f'Valor 50%: {self.valores['50%']['valor']}\n'
+            f'Valor 75%: {self.valores['75%']['valor']}\n'
+            f'Valor 100%: {self.valores['100%']['valor']}\n'
             f'Valor Total: {self.horas_total['valor']}\n'
         )
     
@@ -142,6 +145,10 @@ if chamados_dic["data"]:
 else:
     print('Não foram encontrados chamados no periodo especificado')
 
+acumula_valor = 0
 for indice, obj in periodo_atendimento.items():
     obj.calcula()
     print(indice, obj)
+    acumula_valor += obj.horas_total['valor']
+
+print(f'Valor Acumulado de todos os dias: {acumula_valor:.2f}')

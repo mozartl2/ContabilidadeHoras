@@ -73,8 +73,7 @@ def consulta_chamados(data_inicial_dt, data_final_dt):
 
     lista_chamados = requests.get(url, headers=headers)
     chamados_json = lista_chamados.json()
-    if len(chamados_json['data']) != 0 and chamados_json['data']:
-        return chamados_json
+    return chamados_json
     
 def listar_datas_periodo(dtInicial, dtFinal):
     datas = []
@@ -135,11 +134,13 @@ for data in datas_atendimento:
     periodo_atendimento[data] = DiaSobr(dias_semana[dia_semana], horas_total, feriado)
 
 chamados_dic = consulta_chamados(data_inicial_obj, data_final_obj)
-#Valida se há dados na consulta 
-if chamados_dic["data"]:
+operador = set()
+#Valida se há dados na consulta e inclui os chamados na lista para realizar o calculo
+# print(f'Retorno da API{chamados_dic}')
+if len(chamados_dic["data"]) > 0:
     for chamado in chamados_dic['data']:
         dia, hora = dtm_to_dta_hra(chamado['creation_date'])
-        operador = chamado['operator']['name']
+        operador.add(chamado['operator']['name'])
         periodo_atendimento[dia].atendimentos.add(hora)
         # print(f"Dia: {dia}, Hora: {hora}, Operador: {operador}")
 else:
@@ -152,3 +153,4 @@ for indice, obj in periodo_atendimento.items():
     acumula_valor += obj.horas_total['valor']
 
 print(f'Valor Acumulado de todos os dias: {acumula_valor:.2f}')
+print(f'Operadores encontrados: {operador}')
